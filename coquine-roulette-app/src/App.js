@@ -739,7 +739,7 @@ const App = () => {
 
             if (p1Index !== -1) { // Mixed-sex pair found
                 const selectedBodyPart = getRandomIntenseBodyPart();
-                groups.push({ players: [remainingPlayers[p1Index], remainingPlayers[p2Index]], challenge: `${getRandomFusionAction()}. Le défi se termine par un baiser ${selectedBodyPart}.` });
+                groups.push({ players: [remainingPlayers[p1Index], remainingPlayers[p2Index]], challenge: `${getRandomFusionAction()}. Le défi se termine par une éjaculation sur ${selectedBodyPart}.` });
                 remainingPlayers.splice(p2Index, 1);
                 remainingPlayers.splice(p1Index, 1);
                 attempts = 0;
