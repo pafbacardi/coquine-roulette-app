@@ -7,7 +7,7 @@ import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from 'fireb
 // Ces variables sont injectées au moment de l'exécution et ne doivent pas être modifiées ici.
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? initialAuthToken : null; // Correction: initialAuthToken était mal assigné
 
 const App = () => {
     // États pour gérer les joueurs, les actions, les zones du corps et le résultat du tirage
@@ -270,7 +270,8 @@ const App = () => {
         try {
             await setDoc(doc(db, `artifacts/${appId}/public/data/gameData/actions`), editableActions);
             setActionsData(editableActions); // Mettre à jour l'état local après sauvegarde
-            alert('Actions sauvegardées avec succès !'); // Utilisation temporaire de alert pour la confirmation
+            setErrorMessage('Actions sauvegardées avec succès !'); // Remplacé alert()
+            setShowErrorModal(true); // Afficher le modal de succès/info
         } catch (error) {
             console.error("Error saving actions data:", error);
             setErrorMessage(`Erreur lors de la sauvegarde des actions: ${error.message}`);
@@ -287,7 +288,8 @@ const App = () => {
         try {
             await setDoc(doc(db, `artifacts/${appId}/public/data/gameData/bodyParts`), editableBodyParts);
             setBodyPartsData(editableBodyParts); // Mettre à jour l'état local après sauvegarde
-            alert('Zones du corps sauvegardées avec succès !');
+            setErrorMessage('Zones du corps sauvegardées avec succès !'); // Remplacé alert()
+            setShowErrorModal(true); // Afficher le modal de succès/info
         } catch (error) {
             console.error("Error saving body parts data:", error);
             setErrorMessage(`Erreur lors de la sauvegarde des zones du corps: ${error.message}`);
@@ -312,7 +314,8 @@ const App = () => {
 
             await setDoc(doc(db, `artifacts/${appId}/public/data/gameData/jokerChallenges`), cleanedChallenges);
             setJokerChallengesTemplates(cleanedChallenges); // Mettre à jour l'état local
-            alert('Défis Joker sauvegardés avec succès !');
+            setErrorMessage('Défis Joker sauvegardés avec succès !'); // Remplacé alert()
+            setShowErrorModal(true); // Afficher le modal de succès/info
         } catch (error) {
             console.error("Error saving Joker challenges data:", error);
             setErrorMessage(`Erreur lors de la sauvegarde des défis Joker: ${error.message}`);
@@ -739,7 +742,7 @@ const App = () => {
 
             if (p1Index !== -1) { // Mixed-sex pair found
                 const selectedBodyPart = getRandomIntenseBodyPart();
-                groups.push({ players: [remainingPlayers[p1Index], remainingPlayers[p2Index]], challenge: `${getRandomFusionAction()}. Le défi se termine par une éjaculation sur ${selectedBodyPart}.` });
+                groups.push({ players: [remainingPlayers[p1Index], remainingPlayers[p2Index]], challenge: `${getRandomFusionAction()}. Le défi se termine par un baiser ${selectedBodyPart}.` });
                 remainingPlayers.splice(p2Index, 1);
                 remainingPlayers.splice(p1Index, 1);
                 attempts = 0;
@@ -788,7 +791,7 @@ const App = () => {
                 remainingPlayers.length = 0;
             }
         }
-
+        
         remainingPlayers.forEach(p => soloPlayers.push(p));
 
         return { groups, soloPlayers };
@@ -1557,9 +1560,11 @@ const App = () => {
                                 <button
                                     onClick={() => {
                                         if (adminPassword === ADMIN_SECRET_PASSWORD) {
-                                            alert('Accès Admin accordé !');
+                                            setErrorMessage('Accès Admin accordé !'); // Remplacé alert()
+                                            setShowErrorModal(true); // Afficher le modal de succès/info
                                         } else {
-                                            alert('Mot de passe incorrect !');
+                                            setErrorMessage('Mot de passe incorrect !'); // Remplacé alert()
+                                            setShowErrorModal(true); // Afficher le modal d'erreur
                                             setAdminPassword('');
                                         }
                                     }}
